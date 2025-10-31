@@ -1,0 +1,30 @@
+# NTP configuration file
+# Managed by Ansible - DO NOT EDIT MANUALLY
+
+# Drift file location
+driftfile /var/lib/ntp/ntp.drift
+
+# Statistics directory
+statsdir /var/log/ntpstats/
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+# NTP servers
+{% for server in ntp_servers %}
+server {{ server }} iburst
+{% endfor %}
+
+# Fallback to local clock if all servers unavailable
+server 127.127.1.0
+fallow 127.127.1.0 stratum 10
+
+# Access control
+restrict -4 default kod notrap nomodify nopeer noquery limited
+restrict -6 default kod notrap nomodify nopeer noquery limited
+restrict 127.0.0.1
+restrict ::1
+
+# Leap seconds file
+leapfile /usr/share/zoneinfo/leap-seconds.list

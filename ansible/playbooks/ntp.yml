@@ -1,0 +1,54 @@
+---
+- name: Configure NTP service on Debian-based systems
+  hosts: localhost
+  become: true
+  
+  vars:
+    ntp_servers:
+      - time.windows.com
+      - ntp.nist.gov
+      - 0.pool.ntp.org
+      - 1.pool.ntp.org
+  
+  tasks:
+    - name: Check if running on Debian-based system
+      ansible.builtin.assert:
+        that:
+          - ansible_os_family == "Debian"
+        fail_msg: "This playbook only supports Debian-based systems"
+    
+    - name: Install NTP package
+      ansible.builtin.apt:
+        name: ntp
+        state: present
+        update_cache: yes
+    
+    - name: Backup original NTP configuration
+      ansible.builtin.copy:
+        src: /etc/ntp.conf
+        dest: /etc/ntp.conf.backup
+        remote_src: yes
+        force: no
+      ignore_errors: yes
+    
+    - name: Deploy NTP configuration from template
+      ansible.builtin.template:
+        src: ../templates/ntp.conf.j2
+        dest: /etc/ntp.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      notify: restart ntp service
+    
+    - name: Ensure NTP service is started and enabled
+      ansible.builtin.systemd:
+        name: ntp
+        state: started
+        enabled: yes
+  
+  handlers:
+    - name: restart ntp service
+      ansible.builtin.systemd:
+        name: ntp
+        state: restarted

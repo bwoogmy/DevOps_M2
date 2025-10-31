@@ -1,0 +1,8 @@
+---
+ntp_servers:
+  - time.windows.com
+  - ntp.nist.gov
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+
+ntp_timezone: "UTC"

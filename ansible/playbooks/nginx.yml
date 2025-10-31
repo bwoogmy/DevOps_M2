@@ -1,0 +1,38 @@
+---
+- name: Install and configure Nginx
+  hosts: all
+  become: true
+  
+  tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+    
+    - name: Install Nginx on Debian-based systems
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == "Debian"
+    
+    - name: Install Nginx on RHEL-based systems
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+      when: ansible_os_family == "RedHat"
+    
+    - name: Ensure Nginx is started and enabled
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: yes
+    
+    - name: Check Nginx status
+      ansible.builtin.command: nginx -v
+      register: nginx_version
+      changed_when: false
+    
+    - name: Display Nginx version
+      ansible.builtin.debug:
+        msg: "Nginx installed: {{ nginx_version.stderr }}"
