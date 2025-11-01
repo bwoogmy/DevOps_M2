@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: twitter-db
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - twitter-network
+
+  backend:
+    build:
+      context: ../devops_backend
+      dockerfile: Dockerfile
+    container_name: twitter-backend
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - twitter-network
+
+  frontend:
+    build:
+      context: ../devops_frontend
+      dockerfile: Dockerfile
+    container_name: twitter-frontend
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - backend
+    networks:
+      - twitter-network
+
+volumes:
+  postgres_data:
+
+networks:
+  twitter-network:
+    driver: bridge
