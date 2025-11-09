@@ -1,0 +1,53 @@
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  namespaceOverride: database
+  image:
+    tag: latest
+  auth:
+    username: postgres
+    password: postgres
+    database: twitter_clone
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+      storageClass: ""
+  volumePermissions:
+    enabled: false
+
+# Backend configuration
+backend:
+  enabled: true
+  namespaceOverride: backend
+  replicaCount: 1
+  image:
+    repository: devops-backend
+    tag: latest
+    pullPolicy: Never
+  service:
+    type: ClusterIP
+    port: 8000
+    targetPort: 8000
+  env:
+    - name: DATABASE_URL
+      value: "postgresql://postgres:postgres@twitter-clone-postgresql.database.svc.cluster.local:5432/twitter_clone"
+    - name: DEBUG
+      value: "true"
+
+# Frontend configuration
+frontend:
+  enabled: true
+  namespaceOverride: frontend
+  replicaCount: 1
+  image:
+    repository: devops-frontend
+    tag: v5
+    pullPolicy: Never
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+  env:
+    - name: VITE_API_URL
+      value: "/api/v1"

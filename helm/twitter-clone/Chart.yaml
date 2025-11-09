@@ -1,0 +1,24 @@
+apiVersion: v2
+name: twitter-clone
+description: Umbrella chart for Twitter Clone application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: hereWeGo
+
+dependencies:
+  - name: postgresql
+    version: 16.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  
+  - name: backend
+    version: 0.1.0
+    repository: file://../../../devops_backend/chart
+    condition: backend.enabled
+  
+  - name: frontend
+    version: 0.1.0
+    repository: file://../../../devops_frontend/chart
+    condition: frontend.enabled

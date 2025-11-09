@@ -1,0 +1,15 @@
+Twitter Clone application has been installed!
+
+The following components are deployed:
+- PostgreSQL database (in namespace: database)
+- Backend API (in namespace: backend)
+- Frontend (in namespace: frontend)
+
+To access the frontend:
+  kubectl port-forward -n frontend svc/frontend 3000:80 --address=0.0.0.0
+
+To access the backend API:
+  kubectl port-forward -n backend svc/backend 8000:8000
+
+Check component status:
+  helm list -A
