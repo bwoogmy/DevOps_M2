@@ -19,9 +19,7 @@ services:
       - twitter-network
 
   backend:
-    build:
-      context: ../devops_backend
-      dockerfile: Dockerfile
+    image: ghcr.io/bwoogmy/devops-backend:latest
     container_name: twitter-backend
     env_file:
       - .env
@@ -34,10 +32,12 @@ services:
       - twitter-network
 
   frontend:
-    build:
-      context: ../devops_frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/bwoogmy/devops-frontend:latest
     container_name: twitter-frontend
+    environment:
+      API_URL: http://localhost:8000/api/v1
+      BACKEND_HOST: backend
+      BACKEND_PORT: 8000
     ports:
       - "127.0.0.1:3000:80"
     depends_on:
