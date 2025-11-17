@@ -64,11 +64,8 @@ resource "docker_container" "db" {
 
 # Backend API
 resource "docker_image" "backend" {
-  name = "devops_infra-backend:latest"
-  build {
-    context    = "../../devops_backend"
-    dockerfile = "Dockerfile"
-  }
+  name         = var.backend_image
+  keep_locally = false
 }
 
 resource "docker_container" "backend" {
@@ -96,16 +93,18 @@ resource "docker_container" "backend" {
 
 # Frontend
 resource "docker_image" "frontend" {
-  name = "devops_infra-frontend:latest"
-  build {
-    context    = "../../devops_frontend"
-    dockerfile = "Dockerfile"
-  }
+  name         = var.frontend_image
+  keep_locally = false
 }
 
 resource "docker_container" "frontend" {
   name  = "twitter-frontend-tf"
   image = docker_image.frontend.image_id
+  env = [
+  "API_URL=${var.api_url}",
+  "BACKEND_HOST=${var.backend_host}",
+  "BACKEND_PORT=${var.backend_port}"
+  ]
 
   ports {
     internal = 80
