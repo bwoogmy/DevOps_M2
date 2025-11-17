@@ -39,7 +39,7 @@ services:
       BACKEND_HOST: backend
       BACKEND_PORT: 8000
     ports:
-      - "127.0.0.1:3000:80"
+      - "0.0.0.0:3000:80"
     depends_on:
       - backend
     networks:
