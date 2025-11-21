@@ -11,6 +11,9 @@ pipeline {
     
     environment {
         REGISTRY = 'ghcr.io/bwoogmy'
+        POSTGRES_USER = credentials('postgres-user')
+        POSTGRES_PASSWORD = credentials('postgres-password')
+        POSTGRES_DB = credentials('postgres-db')
     }
     
     stages {
@@ -35,7 +38,9 @@ pipeline {
                         terraform plan \
                             -var="backend_image=${REGISTRY}/devops-backend:${params.BACKEND_TAG}" \
                             -var="frontend_image=${REGISTRY}/devops-frontend:${params.FRONTEND_TAG}" \
-                            -var="postgres_password=${params.POSTGRES_PASSWORD}" \
+                            -var="postgres_user=${POSTGRES_USER}" \
+                            -var="postgres_password=${POSTGRES_PASSWORD}" \
+                            -var="postgres_db=${POSTGRES_DB}" \
                             -out=tfplan
                     """
                 }
