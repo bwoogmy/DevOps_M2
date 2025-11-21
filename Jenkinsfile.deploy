@@ -6,6 +6,7 @@ pipeline {
     parameters {
         string(name: 'BACKEND_TAG', defaultValue: 'latest', description: 'Backend image tag (e.g. v0.0.1)')
         string(name: 'FRONTEND_TAG', defaultValue: 'latest', description: 'Frontend image tag (e.g. v0.0.1)')
+        password(name: 'POSTGRES_PASSWORD', defaultValue: '', description: 'PostgreSQL password')
     }
     
     environment {
@@ -34,6 +35,7 @@ pipeline {
                         terraform plan \
                             -var="backend_image=${REGISTRY}/devops-backend:${params.BACKEND_TAG}" \
                             -var="frontend_image=${REGISTRY}/devops-frontend:${params.FRONTEND_TAG}" \
+                            -var="postgres_password=${params.POSTGRES_PASSWORD}" \
                             -out=tfplan
                     """
                 }
