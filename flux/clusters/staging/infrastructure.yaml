@@ -4,8 +4,8 @@ metadata:
   name: infrastructure-controllers
   namespace: flux-system
 spec:
-  interval: 10m
-  retryInterval: 1m
+  interval: 1m
+  retryInterval: 30s
   timeout: 5m
   sourceRef:
     kind: GitRepository

@@ -4,8 +4,8 @@ metadata:
   name: applications
   namespace: flux-system
 spec:
-  interval: 5m
-  retryInterval: 1m
+  interval: 1m
+  retryInterval: 30s
   timeout: 5m
   dependsOn:
     - name: infrastructure-controllers
