@@ -35,3 +35,5 @@ spec:
       persistence:
         enabled: true
         size: 5Gi
+    image:
+      tag: "latest"
