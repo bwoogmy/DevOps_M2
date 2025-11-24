@@ -23,6 +23,7 @@ spec:
     name: devops-backend
   dependsOn:
     - name: infrastructure-configs
+    - name: infrastructure-controllers
   healthChecks:
     - apiVersion: apps/v1
       kind: Deployment
