@@ -22,7 +22,6 @@ spec:
     kind: GitRepository
     name: devops-backend
   dependsOn:
-    - name: infrastructure-configs
     - name: infrastructure-controllers
   healthChecks:
     - apiVersion: apps/v1
