@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - postgresql.yaml
   - devops-backend.yaml
+  - devops-frontend.yaml
